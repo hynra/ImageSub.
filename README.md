@@ -28,6 +28,9 @@ $ python app.py
 
 Now visit `localhost:8000` in your browser.
 
+![teaser results](https://github.com/hynra/ImageSub./blob/master/301270756.gif?raw=true)
+
+
 
 **"I only have CPU"**. Okay, in that case download the [cpu model checkpoint](http://cs.stanford.edu/people/karpathy/neuraltalk2/checkpoint_v1_cpu.zip). Make sure you add `-gpuid -1` in `vis/app.py` to tell the script to run on CPU. 
 
