@@ -66,6 +66,7 @@ The pretrained checkpoint can be downloaded here: [pretrained checkpoint link](h
 subprocess.call('th eval.lua -model ../Public/model_id1-501-1448236541_cpu.t7 -image_folder '+folder_path+' -num_images 1 -result_folder vis/'+dir, shell=True, cwd="../") 
 ```
 
+`-model` is where your model located.
 Run python server
 
 ```bash
