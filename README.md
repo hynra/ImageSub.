@@ -11,7 +11,8 @@ This is an early code release that works great but is slightly hastily released 
 
 
 ### Requirements
-See original instruction here : (https://github.com/karpathy/neuraltalk2/blob/master/README.md)
+* See original instruction here : (https://github.com/karpathy/neuraltalk2/blob/master/README.md)
+* Instructions in Bahasa Indonesia : https://hynra.com/post/aplikasi-web-image-caption-menggunakan-neural-network-part-2/
 Now you need to clone or download this project into your machine and open open `vis/app.py`, and edit line :
 
 ```bash
