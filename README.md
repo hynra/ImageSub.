@@ -1,19 +1,16 @@
 
-# NeuralTalk2
+# ImageSub.
 
-Recurrent Neural Network captions your images. Now much faster and better than the original [NeuralTalk](https://github.com/karpathy/neuraltalk). Compared to the original NeuralTalk this implementation is **batched, uses Torch, runs on a GPU, and supports CNN finetuning**. All of these together result in quite a large increase in training speed for the Language Model (~100x), but overall not as much because we also have to forward a VGGNet. However, overall very good models can be trained in 2-3 days, and they show a much better performance.
+ImageSub is web app project using  Recurrent Neural Network. This project based on NeuralTalk V2 by [Andrej Karpathy] (https://github.com/karpathy). I modify the project in order to interact with the user via a web application. So Users can upload pictures or photographs that they want to identify its caption. 
 
 This is an early code release that works great but is slightly hastily released and probably requires some code reading of inline comments (which I tried to be quite good with in general). I will be improving it over time but wanted to push the code out there because I promised it to too many people.
 
-This current code (and the pretrained model) gets ~0.9 CIDEr, which would place it around spot #8 on the [codalab leaderboard](https://competitions.codalab.org/competitions/3221#results). I will submit the actual result soon.
 
-![teaser results](https://raw.github.com/karpathy/neuraltalk2/master/vis/teaser.jpeg)
+![teaser results](https://lh3.googleusercontent.com/-Znrp20opeTI/V5_5BIGEYbI/AAAAAAAABUE/q5ZBjnd4ZFksNG0gXnCd1ZtquctDfdlaACCo/s576/Screen%2BShot%2B2016-08-02%2Bat%2B8.33.25%2BAM.png)
 
-You can find a few more example results on the [demo page](http://cs.stanford.edu/people/karpathy/neuraltalk2/demo.html). These results will improve a bit more once the last few bells and whistles are in place (e.g. beam search, ensembling, reranking).
-
-There's also a [fun video](https://vimeo.com/146492001) by [@kcimc](https://twitter.com/kcimc), where he runs a neuraltalk2 pretrained model in real time on his laptop during a walk in Amsterdam.
 
 ### Requirements
+See original readme : (https://github.com/karpathy/neuraltalk2/blob/master/README.md)
 
 
 #### For evaluation only
@@ -63,33 +60,23 @@ Phew! Quite a few dependencies, sorry no easy way around it :\
 
 In this case you want to run the evaluation script on a pretrained model checkpoint. 
 I trained a decent one on the [MS COCO dataset](http://mscoco.org/) that you can run on your images.
-The pretrained checkpoint can be downloaded here: [pretrained checkpoint link](http://cs.stanford.edu/people/karpathy/neuraltalk2/checkpoint_v1.zip) (600MB). It's large because it contains the weights of a finetuned VGGNet. Now place all your images of interest into a folder, e.g. `blah`, and run
-the eval script:
+The pretrained checkpoint can be downloaded here: [pretrained checkpoint link](http://cs.stanford.edu/people/karpathy/neuraltalk2/checkpoint_v1.zip) (600MB). It's large because it contains the weights of a finetuned VGGNet. Now open `vis/app.py`, and edit line :
 
 ```bash
-$ th eval.lua -model /path/to/model -image_folder /path/to/image/directory -num_images 10 
+subprocess.call('th eval.lua -model ../Public/model_id1-501-1448236541_cpu.t7 -image_folder '+folder_path+' -num_images 1 -result_folder vis/'+dir, shell=True, cwd="../") 
 ```
 
-This tells the `eval` script to run up to 10 images from the given folder. If you have a big GPU you can speed up the evaluation by increasing `batch_size` (default = 1). Use `-num_images -1` to process all images. The eval script will create an `vis.json` file inside the `vis` folder, which can then be visualized with the provided HTML interface:
+Run python server
 
 ```bash
 $ cd vis
-$ python -m SimpleHTTPServer
+$ python app.py
 ```
 
-Now visit `localhost:8000` in your browser and you should see your predicted captions.
+Now visit `localhost:8000` in your browser.
 
-You can see an [example visualization demo page here](http://cs.stanford.edu/people/karpathy/neuraltalk2/demo.html).
-
-**Running in Docker**. If you'd like to avoid dependency nightmares, running the codebase from Docker might be a good option. There is one (third-party) [docker repo here](https://github.com/beeva-enriqueotero/docker-neuraltalk2).
 
 **"I only have CPU"**. Okay, in that case download the [cpu model checkpoint](http://cs.stanford.edu/people/karpathy/neuraltalk2/checkpoint_v1_cpu.zip). Make sure you run the eval script with `-gpuid -1` to tell the script to run on CPU. On my machine it takes a bit less than 1 second per image to caption in CPU mode.
-
-**Beam Search**. Beam search is enabled by default because it increases the performance of the search for argmax decoding sequence. However, this is a little more expensive, so if you'd like to evaluate images faster, but at a cost of performance, use `-beam_size 1`. For example, in one of my experiments beam size 2 gives CIDEr 0.922, and beam size 1 gives CIDEr 0.886.
-
-**Running on MSCOCO images**. If you train on MSCOCO (see how below), you will have generated preprocessed MSCOCO images, which you can use directly in the eval script. In this case simply leave out the `image_folder` option and the eval script and instead pass in the `input_h5`, `input_json` to your preprocessed files. This will make more sense once you read the section below :)
-
-**Running a live demo**. With OpenCV 3 installed you can caption video stream from camera in real time. Follow the instructions in [torch-opencv](https://github.com/VisionLabs/torch-opencv/wiki/installation) to install it and run `videocaptioning.lua` similar to `eval.lua`. Note that only central crop will be captioned.
 
 ### I'd like to train my own network on MS COCO
 
