@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>ImageSub. Result</title>
+    <script src="jquery-1.8.3.min.js"></script>
+    <style>
+    body {
+      background: #fff;
+      margin: 0;
+      font-weight: 200;
+    }
+    .caption{
+        color: black;   
+        bottom: 0;
+        width:auto;
+    }
+    #caption {
+      width: auto;
+    }
+    .result {
+      background: no-repeat center/contain #fff;
+      color: #fff;
+      height: 35vw;
+      position: relative;
+      width: 100%;
+        top: 0;
+        bottom: 0;
+      display: inline-block;
+    }
+    #results {
+      margin: 1.5vw auto;
+      width: 96vw;
+    }
+    </style>
+  </head>
+    <center><H1>ImageSub.</H1></center>
+  <body>
+      <hr>
+    <div id="results"></div>
+      <hr>
+      <center><div id="caption"></div></center>
+    <script>
+    function loadVisible() {
+      var top = $(document).scrollTop(), bottom = top + $(window).height();
+      var results = $('#results > div')
+      for (var i = 0; i < results.length; i++) {
+        var div = results.eq(i);
+        var y1 = div.position().top, y2 = y1 + div.height();
+        if (y1 > bottom || y2 < top) {
+          div.css('background-image', '');
+          continue;
+        }
+        div.css('background-image', 'url(' + div.data('image') + ')');
+      }
+    }
+    $(window).scroll(loadVisible);
+    $.getJSON('vis.json?t=' + +new Date, function (data) {
+      $('#results').html('');
+      for (var i = 0; i < data.length; i++) {
+        var path = 'imgs/'+data[i].image_id;
+        $('<div class="result">')
+          .data('image', path)
+          .appendTo('#results');
+        $('<div class="caption">')
+          .append($('<h2>').text(data[i].caption))
+          .appendTo('#caption');
+          
+      }
+      loadVisible();
+    });
+    </script>
+      
+    <center><small>ImageSub. (c) 2016 <a href="http://hynra.com">Hynra</a> | Based on NeuralTalk V2 by Andrej Karpathy</small></center></center>
+    <br />
+    </body>
+</html>
